@@ -1,0 +1,10 @@
+node_modules
+.firebase
+.parcel-cache
+lib
+target
+dist
+test-ledger
+cargo.lock
+.env
+firebase-debug.log
