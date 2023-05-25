@@ -9,7 +9,7 @@ const Root = (): ReactElement => {
 
     return (
         <>
-            <img className="background" src={background} />
+            <img className="background" src={background} alt="" />
             <span className="headline">IW</span>
         </>
     );
