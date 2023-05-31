@@ -9,7 +9,9 @@
         "clean": "rm -r lib .parcel-cache dist || true"
     },
     "dependencies": {
-        "process": "^0.11.10",
+        "@coinflowlabs/react": "^2.1.1",
+        "@solana/spl-token": "^0.3.7",
+        "@solana/web3.js": "^1.77.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
@@ -23,9 +25,11 @@
         "@types/react-dom": "^18.2.4",
         "@typescript-eslint/eslint-plugin": "^5.59.7",
         "@typescript-eslint/parser": "^5.59.7",
+        "buffer": "^6.0.3",
         "eslint": "^8.41.0",
         "eslint-plugin-react": "^7.32.2",
         "parcel": "^2.8.3",
+        "process": "^0.11.10",
         "typescript": "^5.0.4"
     },
     "browserslist": {
