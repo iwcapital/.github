@@ -73,7 +73,6 @@ const OffChain = (): ReactElement => {
     }, [wallet, transaction, amount, connection, signer, onCompletion]);
 
 
-
     useEffect(() => {
         createCheckoutTransaction(connection, signer.publicKey, usdcMint, amount, invoiceId)
             .then(setTransaction)
