@@ -1,4 +1,4 @@
-import { createTransferInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { createTransferInstruction, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
 import type { Connection } from "@solana/web3.js";
 import { Transaction, PublicKey } from "@solana/web3.js";
 import { createMemoInstruction } from "@solana/spl-memo";
@@ -13,11 +13,18 @@ export const createCheckoutTransaction = async (connection: Connection, sender: 
     const senderTokenAccount = await getAssociatedTokenAddress(mint, sender, false);
     const receiverTokenaccount = await getAssociatedTokenAddress(mint, receiver, true);
 
-    const balanceInfo = await connection.getTokenAccountBalance(senderTokenAccount);
-    const balance = balanceInfo.value.uiAmount ?? 0;
-    if (balance < amount && checked) { throw new Error("Insufficient balance"); }
+    let decimals = 0;
+    if (checked) {
+        const balanceInfo = await connection.getTokenAccountBalance(senderTokenAccount);
+        const balance = balanceInfo.value.uiAmount ?? 0;
+        decimals = balanceInfo.value.decimals;
+        if (balance < amount) { throw new Error("Insufficient balance"); }
+    } else {
+        const mintInfo = await getMint(connection, mint);
+        decimals = mintInfo.decimals;
+    }
 
-    const transferAmount = amount * 10 ** balanceInfo.value.decimals;
+    const transferAmount = amount * 10 ** decimals;
     const transferInstruction = createTransferInstruction(senderTokenAccount, receiverTokenaccount, sender, transferAmount);
 
     const block = await connection.getLatestBlockhash("finalized");

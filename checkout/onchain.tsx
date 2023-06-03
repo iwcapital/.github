@@ -1,7 +1,7 @@
 import usdtLogo from "url:../public/usdt.svg";
 import usdcLogo from "url:../public/usdc.svg";
 import type { ReactElement } from "react";
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletReadyState } from "@solana/wallet-adapter-base";
 import { createCheckoutTransaction, usdcMint, usdtMint } from "../utility/transaction";
@@ -9,15 +9,19 @@ import { CheckoutStage, useCheckoutState } from "./state";
 import { MultiButton } from "../components/button";
 import { Disclaimer, Headline, Subline } from "../components/text";
 import { useAlert } from "../modules/alert";
+import type { Transaction } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
+import { Spinner } from "../components/spinner";
+import { css } from "@emotion/react";
 
 const OnChain = (): ReactElement => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const { wallets, wallet, select, connect, sendTransaction } = useWallet();
+    const { wallets, wallet, select, connect, connecting, connected, disconnect, sendTransaction } = useWallet();
     const { setStage, amount, invoiceId, setTxid } = useCheckoutState();
     const { showAlert } = useAlert();
     const { connection } = useConnection();
     const [mint, setMint] = useState(usdcMint);
+    const [transaction, setTransaction] = useState<Transaction>();
 
     const selectToken = useCallback((index: number) => {
         setMint(index === 0 ? usdcMint : usdtMint);
@@ -60,11 +64,34 @@ const OnChain = (): ReactElement => {
         const publicKey = (): PublicKey => wallet.adapter.publicKey ?? PublicKey.default;
         connect() // TODO: <- wallet not connected in time (the first time)
             .then(async () => createCheckoutTransaction(connection, publicKey(), mint, amount, invoiceId, true))
-            .then(async transaction => sendTransaction(transaction, connection))
+            .then(setTransaction)
+            .catch(error => {
+                showAlert(`${error}`, "#f99244");
+                disconnect().catch(() => { /* Empty */ });
+            });
+    }, [wallet, connect, disconnect, connection, mint, amount, invoiceId]);
+
+    const submitTransaction = useCallback(() => {
+        if (transaction == null) { return; }
+        sendTransaction(transaction, connection)
             .then(setTxid)
             .then(() => setStage(CheckoutStage.Finished))
-            .catch(error => showAlert(`${error}`, "#f99244"));
-    }, [wallet, connect, sendTransaction, connection, showAlert, setStage, setTxid, mint, amount, invoiceId]);
+            .catch(error => {
+                showAlert(`${error}`, "#f99244");
+                disconnect().catch(() => { /* Empty */ });
+            });
+    }, [transaction, connection, sendTransaction, setTxid, setStage, showAlert, disconnect]);
+
+    useEffect(() => {
+        submitTransaction();
+    }, [transaction]);
+
+    const actionButton = useMemo(() => {
+        if (connecting || connected) {
+            return <div css={css`display: flex; justify-content: center; height: 59px;`}><Spinner /></div>;
+        }
+        return <MultiButton buttons={[["Purchase", ""]]} selected={0} columns={1} onClick={purchasePressed} />;
+    }, [connecting, connected, purchasePressed]);
 
     return (
         <>
@@ -72,7 +99,7 @@ const OnChain = (): ReactElement => {
             <Subline>Please follow the steps below</Subline>
             <MultiButton title="1. Select your token" buttons={tokenButtons} selected={selectedToken} columns={2} onClick={selectToken} />
             <MultiButton title="2. Select your wallet" buttons={walletButtons} selected={selectedWallet} columns={3} onClick={connectWallet} />
-            <MultiButton buttons={[["Purchase", ""]]} selected={0} columns={1} onClick={purchasePressed} />
+            {actionButton}
             <Disclaimer>By approving the transaction you are agreeing to the IW Capital Inc. terms, privacy and refund policy.</Disclaimer>
         </>
     );
