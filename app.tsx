@@ -1,29 +1,57 @@
-import "css:./app.css";
-import React, { useMemo, useCallback, lazy, useEffect } from "react";
+import React, { useMemo, lazy, useEffect } from "react";
 import background from "url:./public/background.webp";
 import type { ReactElement } from "react";
 import { createRoot } from "react-dom/client";
+import { css } from "@emotion/react";
 
-const Checkout = lazy(() => import("./checkout"));
+const Checkout = lazy(async () => import("./checkout/root"));
 
 const Root = (): ReactElement => {
     const [popupContent, setPopupContent] = React.useState<ReactElement | null>(null);
 
-    const closePopup = useCallback(() => {
-        const path = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        window.history.replaceState({ path }, "", path);
-        setPopupContent(null);
+    const popupStyle = useMemo(() => {
+        return css`
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #f1f1ef;
+            border-radius: 24px;
+            filter: drop-shadow(4px 4px 20px #00000020);
+            max-height: 70vh;
+            width: 70vw;
+            max-width: 512px;
+            background-color: #2f323a;
+            padding: 16px 32px;
+            overflow: hidden auto;
+        `;
     }, []);
 
     const popup = useMemo(() => {
-        if (popupContent == null) { return; }
-        return (
-            <>
-                <div className="popup-overlay" onClick={closePopup} />
-                <div className="popup-background">{popupContent}</div>
-            </>
-        );
+        if (popupContent == null) { return null; }
+        return <div css={popupStyle}>{popupContent}</div>;
     }, [popupContent]);
+
+    const backgroundStyle = useMemo(() => {
+        return css`
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        `;
+    }, []);
+
+    const headlineStyle = useMemo(() => {
+        return css`
+            color: #ffffff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 150px;
+            font-weight: bold;
+        `;
+    }, []);
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
@@ -34,8 +62,8 @@ const Root = (): ReactElement => {
 
     return (
         <>
-            <img className="background" src={background} alt="" />
-            <span className="headline">IW</span>
+            <img css={backgroundStyle} src={background} alt="" />
+            <span css={headlineStyle}>IW</span>
             {popup}
         </>
     );

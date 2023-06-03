@@ -6,6 +6,7 @@
         "module": "ESNext",
         "moduleResolution": "Node",
         "jsx": "react-jsx",
+        "jsxImportSource": "@emotion/react",
         "strict": true,
         "removeComments": true,
         "esModuleInterop": true,
