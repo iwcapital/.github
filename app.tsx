@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
 const Invoice = lazy(async () => import("./invoice/root"));
 
 const Root = (): ReactElement => {
-    const [popupContent, setPopupContent] = React.useState<ReactElement | null>(null);
+    const [popupContent, setPopupContent] = React.useState<ReactElement>();
 
     const popupStyle = useMemo(() => {
         return css`

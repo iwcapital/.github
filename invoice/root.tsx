@@ -11,14 +11,14 @@ const AlertProvider = lazy(async () => import("../modules/alert"));
 const SolanaProvider = lazy(async () => import("../modules/solana"));
 const InvoiceStateProvider = lazy(async () => import("./state"));
 
-const Invoice = (): ReactElement | null => {
+const Invoice = (): ReactElement => {
     const { stage } = useInvoiceState();
     switch (stage) {
         case InvoiceStage.Initialize: return <Initialize />;
         case InvoiceStage.OnChain: return <OnChain />;
         case InvoiceStage.OffChain: return <OffChain />;
         case InvoiceStage.Finished: return <Finished />;
-        default: return null;
+        default: return <div />;
     }
 };
 
