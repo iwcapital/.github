@@ -10,10 +10,25 @@
     },
     "dependencies": {
         "@coinflowlabs/react": "^2.1.1",
-        "@solana/spl-token": "^0.3.7",
+        "@emotion/react": "^11.11.0",
+        "@emotion/styled": "^11.11.0",
+        "@solana/spl-memo": "^0.2.3",
+        "@solana/spl-token": "^0.3.8",
+        "@solana/wallet-adapter-base": "^0.9.22",
+        "@solana/wallet-adapter-coinbase": "^0.1.17",
+        "@solana/wallet-adapter-glow": "^0.1.17",
+        "@solana/wallet-adapter-ledger": "^0.9.24",
+        "@solana/wallet-adapter-mathwallet": "^0.9.17",
+        "@solana/wallet-adapter-phantom": "^0.9.22",
+        "@solana/wallet-adapter-react": "^0.15.32",
+        "@solana/wallet-adapter-solflare": "^0.6.24",
+        "@solana/wallet-adapter-solong": "^0.9.17",
+        "@solana/wallet-adapter-tokenpocket": "^0.4.18",
+        "@solana/wallet-adapter-trust": "^0.1.12",
         "@solana/web3.js": "^1.77.2",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "the-new-css-reset": "^1.8.4"
     },
     "devDependencies": {
         "@parcel/packager-raw-url": "^2.8.3",
