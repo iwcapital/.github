@@ -2,8 +2,8 @@ import solanaLogo from "url:../public/solana.svg";
 import cardLogo from "url:../public/generic.svg";
 import type { ReactElement } from "react";
 import React, { useCallback, useMemo } from "react";
-import { CheckoutStage } from "./state";
-import { useCheckoutState } from "./state";
+import { InvoiceStage } from "./state";
+import { useInvoiceState } from "./state";
 import { Input } from "../components/input";
 import { MultiButton } from "../components/button";
 import { useAlert } from "../modules/alert";
@@ -11,7 +11,7 @@ import { Headline, Subline } from "../components/text";
 import { VerticalSpacer } from "../components/auxillary";
 
 const Initialize = (): ReactElement => {
-    const { setStage, invoiceId, setInvoiceId, amount, setAmount } = useCheckoutState();
+    const { setStage, invoiceId, setInvoiceId, amount, setAmount } = useInvoiceState();
     const { showAlert } = useAlert();
 
     const buttonClicked = useCallback((index: number) => {
@@ -23,7 +23,7 @@ const Initialize = (): ReactElement => {
             showAlert("Error: Invalid invoice amount", "#f99244");
             return;
         }
-        setStage(index === 0 ? CheckoutStage.OnChain : CheckoutStage.OffChain);
+        setStage(index === 0 ? InvoiceStage.OnChain : InvoiceStage.OffChain);
     }, [amount, invoiceId, setStage]);
 
     const invoiceIdChanged = useCallback((text: string) => {

@@ -5,15 +5,15 @@ import { Keypair } from "@solana/web3.js";
 import type { ReactElement } from "react";
 import React, { useCallback, useState, useEffect, useMemo } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
-import { CheckoutStage, useCheckoutState } from "./state";
-import { createCheckoutTransaction, usdcMint } from "../utility/transaction";
+import { InvoiceStage, useInvoiceState } from "./state";
+import { createInvoiceTransaction, usdcMint } from "../utility/transaction";
 import { Headline, Subline } from "../components/text";
 import { css } from "@emotion/react";
 import { useAlert } from "../modules/alert";
 import { Spinner } from "../components/spinner";
 
 const OffChain = (): ReactElement => {
-    const { setStage, amount, invoiceId, setTxid } = useCheckoutState();
+    const { setStage, amount, invoiceId, setTxid } = useInvoiceState();
     const { showAlert } = useAlert();
     const { connection } = useConnection();
     const [transaction, setTransaction] = useState<Transaction>();
@@ -24,7 +24,7 @@ const OffChain = (): ReactElement => {
         trans.partialSign(signer);
         const hash = await connection.sendRawTransaction(trans.serialize());
         setTxid(hash);
-        setStage(CheckoutStage.Finished);
+        setStage(InvoiceStage.Finished);
         return hash;
     }, [signer, connection, setTxid, setStage]);
 
@@ -52,11 +52,11 @@ const OffChain = (): ReactElement => {
     }, []);
 
     const onCompletion = useCallback(() => {
-        setStage(CheckoutStage.Finished);
+        setStage(InvoiceStage.Finished);
     }, [setStage]);
 
     useEffect(() => {
-        createCheckoutTransaction(connection, signer.publicKey, usdcMint, amount, invoiceId)
+        createInvoiceTransaction(connection, signer.publicKey, usdcMint, amount, invoiceId)
             .then(setTransaction)
             .catch(error => showAlert(`${error}`, "#f99244"));
     }, [signer, connection, invoiceId, amount, setTransaction, showAlert]);
