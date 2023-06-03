@@ -16,11 +16,11 @@ const Initialize = (): ReactElement => {
 
     const buttonClicked = useCallback((index: number) => {
         if (invoiceId.length !== 7) {
-            showAlert("Invalid invoice number", "#f99244");
+            showAlert("Error: Invalid invoice number", "#f99244");
             return;
         }
         if (amount <= 10) {
-            showAlert("Invalid invoice amount", "#f99244");
+            showAlert("Error: Invalid invoice amount", "#f99244");
             return;
         }
         setStage(index === 0 ? CheckoutStage.OnChain : CheckoutStage.OffChain);

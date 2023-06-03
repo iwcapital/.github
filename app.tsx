@@ -18,7 +18,7 @@ const Root = (): ReactElement => {
             color: #f1f1ef;
             border-radius: 24px;
             filter: drop-shadow(4px 4px 20px #00000020);
-            max-height: 70vh;
+            max-height: 90vh;
             width: 70vw;
             max-width: 512px;
             background-color: #2f323a;

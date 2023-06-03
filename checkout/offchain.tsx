@@ -9,11 +9,14 @@ import { CheckoutStage, useCheckoutState } from "./state";
 import { createCheckoutTransaction, usdcMint } from "../utility/transaction";
 import { Headline, Subline } from "../components/text";
 import { css } from "@emotion/react";
+import { useAlert } from "../modules/alert";
+import { Spinner } from "../components/spinner";
 
 const OffChain = (): ReactElement => {
     const { setStage, amount, invoiceId, setTxid } = useCheckoutState();
+    const { showAlert } = useAlert();
     const { connection } = useConnection();
-    const [transaction, setTransaction] = useState<Transaction | undefined>();
+    const [transaction, setTransaction] = useState<Transaction>();
 
     const signer = useMemo(() => Keypair.generate(), []);
 
@@ -32,6 +35,22 @@ const OffChain = (): ReactElement => {
         } as SolanaWallet;
     }, [signer, sendTransaction]);
 
+    const spinnerStyle = useMemo(() => {
+        return css`
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        `;
+    }, []);
+
+    const blockStyle = useMemo(() => {
+        return css`
+            height: 1280px;
+        `;
+    }, []);
+
     const onCompletion = useCallback(() => {
         setStage(CheckoutStage.Finished);
     }, [setStage]);
@@ -39,13 +58,14 @@ const OffChain = (): ReactElement => {
     useEffect(() => {
         createCheckoutTransaction(connection, signer.publicKey, usdcMint, amount, invoiceId)
             .then(setTransaction)
-            .catch(() => { /* Empty */ });
-    }, [signer, connection, invoiceId, amount, setTransaction]);
+            .catch(error => showAlert(`${error}`, "#f99244"));
+    }, [signer, connection, invoiceId, amount, setTransaction, showAlert]);
 
     return (
-        <div css={css`height: 1280px;`}>
+        <div css={blockStyle}>
             <Headline>Off-chain Settlement</Headline>
             <Subline>Please enter your details below</Subline>
+            <div css={spinnerStyle}><Spinner /></div>
             <CoinflowPurchase
                 wallet={wallet}
                 transaction={transaction}
