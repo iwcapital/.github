@@ -4,8 +4,8 @@ import type { ReactElement } from "react";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletReadyState } from "@solana/wallet-adapter-base";
-import { createCheckoutTransaction, usdcMint, usdtMint } from "../utility/transaction";
-import { CheckoutStage, useCheckoutState } from "./state";
+import { createInvoiceTransaction, usdcMint, usdtMint } from "../utility/transaction";
+import { InvoiceStage, useInvoiceState } from "./state";
 import { MultiButton } from "../components/button";
 import { Disclaimer, Headline, Subline } from "../components/text";
 import { useAlert } from "../modules/alert";
@@ -17,7 +17,7 @@ import { css } from "@emotion/react";
 const OnChain = (): ReactElement => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     const { wallets, wallet, select, connect, connecting, connected, disconnect, sendTransaction } = useWallet();
-    const { setStage, amount, invoiceId, setTxid } = useCheckoutState();
+    const { setStage, amount, invoiceId, setTxid } = useInvoiceState();
     const { showAlert } = useAlert();
     const { connection } = useConnection();
     const [mint, setMint] = useState(usdcMint);
@@ -63,7 +63,7 @@ const OnChain = (): ReactElement => {
         }
         const publicKey = (): PublicKey => wallet.adapter.publicKey ?? PublicKey.default;
         connect() // TODO: <- wallet not connected in time (the first time)
-            .then(async () => createCheckoutTransaction(connection, publicKey(), mint, amount, invoiceId, true))
+            .then(async () => createInvoiceTransaction(connection, publicKey(), mint, amount, invoiceId, true))
             .then(setTransaction)
             .catch(error => {
                 showAlert(`${error}`, "#f99244");
@@ -75,7 +75,7 @@ const OnChain = (): ReactElement => {
         if (transaction == null) { return; }
         sendTransaction(transaction, connection)
             .then(setTxid)
-            .then(() => setStage(CheckoutStage.Finished))
+            .then(() => setStage(InvoiceStage.Finished))
             .catch(error => {
                 showAlert(`${error}`, "#f99244");
                 disconnect().catch(() => { /* Empty */ });

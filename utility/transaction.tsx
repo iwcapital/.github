@@ -7,7 +7,7 @@ export const receiver = new PublicKey("5jzLMhn1rCLEf4UgMoiSY9LEs6azuCbfoKthHQsg2
 export const usdcMint = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 export const usdtMint = new PublicKey("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB");
 
-export const createCheckoutTransaction = async (connection: Connection, sender: PublicKey, mint: PublicKey, amount: number, memo: string, checked = false): Promise<Transaction> => {
+export const createInvoiceTransaction = async (connection: Connection, sender: PublicKey, mint: PublicKey, amount: number, memo: string, checked = false): Promise<Transaction> => {
     const memoInstruction = createMemoInstruction(`#${memo}`);
 
     const senderTokenAccount = await getAssociatedTokenAddress(mint, sender, false);

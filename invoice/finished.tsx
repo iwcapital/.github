@@ -1,12 +1,12 @@
 import explorerIcon from "url:../public/explorer.svg";
 import type { ReactElement } from "react";
 import React, { useCallback, useMemo } from "react";
-import { useCheckoutState } from "./state";
+import { useInvoiceState } from "./state";
 import { MultiButton } from "../components/button";
 import { Headline, Subline } from "../components/text";
 
 const Finished = (): ReactElement => {
-    const { txid } = useCheckoutState();
+    const { txid } = useInvoiceState();
 
     const explorerClicked = useCallback(() => {
         window.open(`https://solscan.io/tx/${txid}`, "_blank", "noopener,noreferrer");

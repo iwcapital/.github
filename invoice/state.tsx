@@ -1,16 +1,16 @@
 import type { PropsWithChildren, ReactElement } from "react";
 import React, { createContext, useContext, useMemo, useState } from "react";
 
-export enum CheckoutStage {
+export enum InvoiceStage {
     Initialize = "initialize",
     OnChain = "onchain",
     OffChain = "offchain",
     Finished = "finished"
 }
 
-interface IUseCheckoutState {
-    stage: CheckoutStage;
-    setStage: (state: CheckoutStage) => void;
+interface IUseInvoiceState {
+    stage: InvoiceStage;
+    setStage: (state: InvoiceStage) => void;
     invoiceId: string;
     setInvoiceId: (invoiceId: string) => void;
     amount: number;
@@ -19,8 +19,8 @@ interface IUseCheckoutState {
     setTxid: (txid: string) => void;
 }
 
-const Context = createContext<IUseCheckoutState>({
-    stage: CheckoutStage.Initialize,
+const Context = createContext<IUseInvoiceState>({
+    stage: InvoiceStage.Initialize,
     setStage: () => { /* Empty */ },
     invoiceId: "",
     setInvoiceId: () => { /* Empty */ },
@@ -30,12 +30,12 @@ const Context = createContext<IUseCheckoutState>({
     setTxid: () => { /* Empty */ }
 });
 
-export const useCheckoutState = (): IUseCheckoutState => {
+export const useInvoiceState = (): IUseInvoiceState => {
     return useContext(Context);
 };
 
-const CheckoutStateProvider = (props: PropsWithChildren): ReactElement => {
-    const [stage, setStage] = useState(CheckoutStage.Initialize);
+const InvoiceStateProvider = (props: PropsWithChildren): ReactElement => {
+    const [stage, setStage] = useState(InvoiceStage.Initialize);
     const [invoiceId, setInvoiceId] = useState("");
     const [amount, setAmount] = useState(0);
     const [txid, setTxid] = useState("");
@@ -47,5 +47,5 @@ const CheckoutStateProvider = (props: PropsWithChildren): ReactElement => {
     return <Context.Provider value={context}>{props.children}</Context.Provider>;
 };
 
-export default CheckoutStateProvider;
+export default InvoiceStateProvider;
 
