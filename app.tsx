@@ -4,7 +4,7 @@ import type { ReactElement } from "react";
 import { createRoot } from "react-dom/client";
 import { css } from "@emotion/react";
 
-const Checkout = lazy(async () => import("./checkout/root"));
+const Invoice = lazy(async () => import("./invoice/root"));
 
 const Root = (): ReactElement => {
     const [popupContent, setPopupContent] = React.useState<ReactElement | null>(null);
@@ -55,8 +55,8 @@ const Root = (): ReactElement => {
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
-        if (query.get("checkout") === "") {
-            setPopupContent(<Checkout />);
+        if (query.get("invoice") === "") {
+            setPopupContent(<Invoice />);
         }
     }, []);
 
