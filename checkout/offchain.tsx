@@ -28,6 +28,10 @@ const OffChain = (): ReactElement => {
         return hash;
     }, [signer, connection, setTxid, setStage]);
 
+    const onCompletion = useCallback(() => {
+        setStage(CheckoutStage.Finished);
+    }, [setStage]);
+
     const wallet = useMemo(() => {
         return {
             publicKey: signer.publicKey,
@@ -51,9 +55,24 @@ const OffChain = (): ReactElement => {
         `;
     }, []);
 
-    const onCompletion = useCallback(() => {
-        setStage(CheckoutStage.Finished);
-    }, [setStage]);
+    const coinflow = useMemo(() => {
+        if (transaction == null) { return null; }
+        return (
+            <CoinflowPurchase
+                wallet={wallet}
+                transaction={transaction}
+                merchantId="iwcapital"
+                env="sandbox"
+                amount={amount}
+                connection={connection}
+                blockchain="solana"
+                onSuccess={onCompletion}
+                webhookInfo={{ key: signer.secretKey }}
+            />
+        );
+    }, [wallet, transaction, amount, connection, signer, onCompletion]);
+
+
 
     useEffect(() => {
         createCheckoutTransaction(connection, signer.publicKey, usdcMint, amount, invoiceId)
@@ -66,17 +85,7 @@ const OffChain = (): ReactElement => {
             <Headline>Off-chain Settlement</Headline>
             <Subline>Please enter your details below</Subline>
             <div css={spinnerStyle}><Spinner /></div>
-            <CoinflowPurchase
-                wallet={wallet}
-                transaction={transaction}
-                merchantId="iwcapital"
-                env="sandbox"
-                amount={amount}
-                connection={connection}
-                blockchain="solana"
-                onSuccess={onCompletion}
-                webhookInfo={{ key: signer.secretKey }}
-            />
+            {coinflow}
         </div>
     );
 };
