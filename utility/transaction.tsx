@@ -8,8 +8,6 @@ export const usdcMint = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTD
 export const usdtMint = new PublicKey("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB");
 
 export const createInvoiceTransaction = async (connection: Connection, sender: PublicKey, mint: PublicKey, amount: number, memo: string, checked = false): Promise<Transaction> => {
-    const memoInstruction = createMemoInstruction(`#${memo}`);
-
     const senderTokenAccount = await getAssociatedTokenAddress(mint, sender, false);
     const receiverTokenaccount = await getAssociatedTokenAddress(mint, receiver, true);
 
@@ -26,12 +24,13 @@ export const createInvoiceTransaction = async (connection: Connection, sender: P
 
     const transferAmount = amount * 10 ** decimals;
     const transferInstruction = createTransferInstruction(senderTokenAccount, receiverTokenaccount, sender, transferAmount);
+    const memoInstruction = createMemoInstruction(`#${memo}`);
 
     const block = await connection.getLatestBlockhash("finalized");
 
     const tx = new Transaction();
-    tx.add(memoInstruction);
     tx.add(transferInstruction);
+    tx.add(memoInstruction);
     tx.feePayer = sender;
     tx.recentBlockhash = block.blockhash;
 

@@ -24,7 +24,6 @@ const OffChain = (): ReactElement => {
         trans.partialSign(signer);
         const hash = await connection.sendRawTransaction(trans.serialize());
         setTxid(hash);
-        setStage(InvoiceStage.Finished);
         return hash;
     }, [signer, connection, setTxid, setStage]);
 
@@ -35,7 +34,7 @@ const OffChain = (): ReactElement => {
     const wallet = useMemo(() => {
         return {
             publicKey: signer.publicKey,
-            sendTransaction // TODO: <- needs to be tested
+            sendTransaction
         } as SolanaWallet;
     }, [signer, sendTransaction]);
 
@@ -62,7 +61,6 @@ const OffChain = (): ReactElement => {
                 wallet={wallet}
                 transaction={transaction}
                 merchantId="iwcapital"
-                env="sandbox"
                 amount={amount}
                 connection={connection}
                 blockchain="solana"
