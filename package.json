@@ -26,6 +26,7 @@
         "@solana/wallet-adapter-tokenpocket": "^0.4.18",
         "@solana/wallet-adapter-trust": "^0.1.12",
         "@solana/web3.js": "^1.77.2",
+        "firebase": "10.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "the-new-css-reset": "^1.8.4"
@@ -43,6 +44,7 @@
         "buffer": "^6.0.3",
         "eslint": "^8.41.0",
         "eslint-plugin-react": "^7.32.2",
+        "firebase-tools": "12.4.4",
         "parcel": "^2.8.3",
         "process": "^0.11.10",
         "typescript": "^5.0.4"

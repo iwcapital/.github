@@ -60,6 +60,11 @@ const Root = (): ReactElement => {
         }
     }, []);
 
+    useEffect(() => {
+        import("./modules/firebase")
+            .catch(() => { /* Ignore */ });
+    }, []);
+
     return (
         <>
             <img css={backgroundStyle} src={background} alt="" />
