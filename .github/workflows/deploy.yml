@@ -35,7 +35,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Build Web
-        run: npm run build web
+        run: npm run build
       - name: Bundle Web
         run:  npx parcel build --no-cache --no-autoinstall
       - name: Deploy Web
