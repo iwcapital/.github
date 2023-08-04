@@ -3,7 +3,7 @@ import type { Connection } from "@solana/web3.js";
 import { Transaction, PublicKey } from "@solana/web3.js";
 import { createMemoInstruction } from "@solana/spl-memo";
 
-export const receiver = new PublicKey("5jzLMhn1rCLEf4UgMoiSY9LEs6azuCbfoKthHQsg2KB7");
+export const receiver = new PublicKey("6V4CFvMqeq3REaqnrozq6HX7Z7BxDYXhFYjZR1WRADXe");
 export const usdcMint = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 export const usdtMint = new PublicKey("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB");
 
