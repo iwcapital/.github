@@ -100,7 +100,7 @@ const OnChain = (): ReactElement => {
             <MultiButton title="1. Select your token" buttons={tokenButtons} selected={selectedToken} columns={2} onClick={selectToken} />
             <MultiButton title="2. Select your wallet" buttons={walletButtons} selected={selectedWallet} columns={3} onClick={connectWallet} />
             {actionButton}
-            <Disclaimer>By approving the transaction you are agreeing to the IW Capital Inc. terms, privacy and refund policy.</Disclaimer>
+            <Disclaimer>By approving the transaction you are agreeing to the IW Capital LLC terms, privacy and refund policy.</Disclaimer>
         </>
     );
 };

@@ -44,7 +44,7 @@ const Initialize = (): ReactElement => {
 
     return (
         <>
-            <Headline>IW Capital Inc.</Headline>
+            <Headline>IW Capital LLC</Headline>
             <Subline>Invoice Settlement</Subline>
             <Input title="Invoice No." onChange={invoiceIdChanged} accessory="#" placeholder="1234567" aria-label="Invoice number" />
             <Input title="Amount" onChange={amountChanged} accessory="$" placeholder="1000" aria-label="Invoice amount" />
