@@ -54,9 +54,10 @@ const Root = (): ReactElement => {
     }, []);
 
     useEffect(() => {
-        const query = new URLSearchParams(window.location.search);
-        if (query.get("invoice") === "") {
-            setPopupContent(<Invoice />);
+        const path = window.location.pathname.slice(1);
+        switch (path) {
+            case "invoice": setPopupContent(<Invoice />); break;
+            default: window.history.replaceState({}, "", "/"); break;
         }
     }, []);
 
