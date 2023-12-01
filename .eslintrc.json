@@ -101,6 +101,8 @@
         "react/no-danger": "off",
         "react/no-unknown-property": ["error", { "ignore": ["css"] }],
         "react/jsx-props-no-spreading": "off",
+        "@typescript-eslint/max-params": "off",
+        "@typescript-eslint/prefer-destructuring": "off",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/space-before-function-paren": "off",

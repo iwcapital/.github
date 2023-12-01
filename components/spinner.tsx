@@ -13,8 +13,8 @@ const spin = keyframes`
 `;
 
 interface IProps {
-    size?: number;
-    width?: number;
+    readonly size?: number;
+    readonly width?: number;
 }
 
 export const Spinner = (props: IProps): ReactElement => {
