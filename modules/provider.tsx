@@ -2,14 +2,14 @@ import type { ComponentType, LazyExoticComponent, PropsWithChildren, ReactElemen
 import React from "react";
 
 interface IProps extends PropsWithChildren {
-    providers: Array<LazyExoticComponent<ComponentType<PropsWithChildren>>>;
+    readonly providers: Array<LazyExoticComponent<ComponentType<PropsWithChildren>>>;
 }
 
 const Provider = (props: IProps): ReactElement => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     if (props.providers.length === 0) { return <>{props.children}</>; }
-    const Tag = props.providers[0];
-    let children = props.children;
+    const [Tag] = props.providers;
+    let { children } = props;
     if (props.providers.length > 1) {
         const next = props.providers.slice(1);
         children = <Provider providers={next}>{props.children}</Provider>;

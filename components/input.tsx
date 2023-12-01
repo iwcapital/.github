@@ -9,13 +9,13 @@ export enum InputType {
 }
 
 export interface InputProps {
-    initial?: string;
-    title?: string;
-    accessory?: string;
-    placeholder?: string;
-    label?: string;
-    type?: InputType;
-    onChange?: (text: string) => void;
+    readonly initial?: string;
+    readonly title?: string;
+    readonly accessory?: string;
+    readonly placeholder?: string;
+    readonly label?: string;
+    readonly type?: InputType;
+    readonly onChange?: (text: string) => void;
 }
 
 export const Input = (props: InputProps): ReactElement => {

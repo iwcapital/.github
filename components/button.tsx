@@ -3,11 +3,11 @@ import React, { useMemo, useCallback } from "react";
 import { css } from "@emotion/react";
 
 interface IProps {
-    title?: string;
-    buttons?: Array<[string, string]>;
-    columns?: number;
-    selected?: number;
-    onClick?: (index: number) => void;
+    readonly title?: string;
+    readonly buttons?: Array<[string, string]>;
+    readonly columns?: number;
+    readonly selected?: number;
+    readonly onClick?: (index: number) => void;
 }
 
 export const MultiButton = (props: IProps): ReactElement => {
