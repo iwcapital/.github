@@ -1,39 +1,35 @@
 import usdtLogo from "url:../public/usdt.svg";
 import usdcLogo from "url:../public/usdc.svg";
 import type { ReactElement } from "react";
-import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { WalletReadyState } from "@solana/wallet-adapter-base";
+import React, { useState, useCallback, useMemo } from "react";
 import { createInvoiceTransaction, usdcMint, usdtMint } from "../utility/transaction";
 import { InvoiceStage, useInvoiceState } from "./state";
 import { MultiButton } from "../components/button";
 import { Disclaimer, Headline, Subline } from "../components/text";
 import { useAlert } from "../modules/alert";
-import type { Transaction } from "@solana/web3.js";
-import { PublicKey } from "@solana/web3.js";
 import { Spinner } from "../components/spinner";
 import { css } from "@emotion/react";
+import { connection, useSolana } from "../modules/solana";
 
 const OnChain = (): ReactElement => {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    const { wallets, wallet, select, connect, connecting, connected, disconnect, sendTransaction } = useWallet();
+    const { wallets, connecting, connect, signing, sendTransaction, pubKey } = useSolana();
+    const [wallet, setWallet] = useState(wallets[0]);
     const { setStage, amount, invoiceId, setTxid } = useInvoiceState();
     const { showAlert } = useAlert();
-    const { connection } = useConnection();
     const [mint, setMint] = useState(usdcMint);
-    const [transaction, setTransaction] = useState<Transaction>();
 
     const selectToken = useCallback((index: number) => {
         setMint(index === 0 ? usdcMint : usdtMint);
     }, [setMint]);
 
     const connectWallet = useCallback((index: number) => {
-        const newWallet = wallets[index];
-        select(newWallet.adapter.name);
-    }, [wallets, select]);
+        setWallet(wallets[index]);
+    }, [wallets, setWallet]);
 
     const walletButtons = useMemo(() => {
-        return wallets.map(x => [x.adapter.name, x.adapter.icon] as [string, string]);
+        return wallets
+            .filter(x => x.chains.includes("solana:mainnet"))
+            .map(x => [x.name, x.icon] as [string, string]);
     }, [wallets]);
 
     const tokenButtons = useMemo(() => {
@@ -49,49 +45,31 @@ const OnChain = (): ReactElement => {
 
     const selectedWallet = useMemo(() => {
         if (wallet == null) { return -1; }
-        return wallets.findIndex(x => x.adapter.name === wallet.adapter.name);
+        return wallets.findIndex(x => x.name === wallet.name);
     }, [wallet, wallets]);
 
-    const purchasePressed = useCallback(() => {
-        if (wallet == null) { return; }
-        const isInstalled = wallet.readyState === WalletReadyState.Installed;
-        const isLoadable = wallet.readyState === WalletReadyState.Loadable;
-        const isReady = isInstalled || isLoadable;
-        if (!isReady) {
-            window.open(wallet.adapter.url, "_blank", "noopener,noreferrer");
-            return;
-        }
-        const publicKey = (): PublicKey => wallet.adapter.publicKey ?? PublicKey.default;
-        connect() // TODO: <- wallet not connected in time (the first time)
-            .then(async () => createInvoiceTransaction(connection, publicKey(), mint, amount, invoiceId, true))
-            .then(setTransaction)
-            .catch(error => {
-                showAlert(`${error}`, "#f99244");
-                disconnect().catch(() => { /* Empty */ });
-            });
-    }, [wallet, connect, disconnect, connection, mint, amount, invoiceId]);
+    const submitTransaction = async (): Promise<string> => {
+        await connect(wallet);
+        const publicKey = pubKey(wallet);
+        const transaction = await createInvoiceTransaction(connection, publicKey, mint, amount, invoiceId);
+        return sendTransaction(wallet, transaction);
+    };
 
-    const submitTransaction = useCallback(() => {
-        if (transaction == null) { return; }
-        sendTransaction(transaction, connection)
+    const purchasePressed = useCallback(() => {
+        submitTransaction()
             .then(setTxid)
             .then(() => setStage(InvoiceStage.Finished))
             .catch(error => {
                 showAlert(`${error}`, "#f99244");
-                disconnect().catch(() => { /* Empty */ });
             });
-    }, [transaction, connection, sendTransaction, setTxid, setStage, showAlert, disconnect]);
-
-    useEffect(() => {
-        submitTransaction();
-    }, [transaction]);
+    }, [submitTransaction]);
 
     const actionButton = useMemo(() => {
-        if (connecting || connected) {
+        if (connecting || signing) {
             return <div css={css`display: flex; justify-content: center; height: 59px;`}><Spinner /></div>;
         }
         return <MultiButton buttons={[["Purchase", ""]]} selected={0} columns={1} onClick={purchasePressed} />;
-    }, [connecting, connected, purchasePressed]);
+    }, [connecting, signing, purchasePressed]);
 
     return (
         <>

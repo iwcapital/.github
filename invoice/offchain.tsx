@@ -4,18 +4,17 @@ import type { Transaction } from "@solana/web3.js";
 import { Keypair } from "@solana/web3.js";
 import type { ReactElement } from "react";
 import React, { useCallback, useState, useEffect, useMemo } from "react";
-import { useConnection } from "@solana/wallet-adapter-react";
 import { InvoiceStage, useInvoiceState } from "./state";
 import { createInvoiceTransaction, usdcMint } from "../utility/transaction";
 import { Headline, Subline } from "../components/text";
 import { css } from "@emotion/react";
 import { useAlert } from "../modules/alert";
 import { Spinner } from "../components/spinner";
+import { connection } from "../modules/solana";
 
 const OffChain = (): ReactElement => {
     const { setStage, amount, invoiceId, setTxid } = useInvoiceState();
     const { showAlert } = useAlert();
-    const { connection } = useConnection();
     const [transaction, setTransaction] = useState<Transaction>();
 
     const signer = useMemo(() => Keypair.generate(), []);
