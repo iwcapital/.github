@@ -19,7 +19,7 @@ const Initialize = (): ReactElement => {
             showAlert("Error: Invalid invoice number", "#f99244");
             return;
         }
-        if (amount <= 10) {
+        if (amount < 10) {
             showAlert("Error: Invalid invoice amount", "#f99244");
             return;
         }
