@@ -12,7 +12,7 @@ interface IProps {
 
 export const MultiButton = (props: IProps): ReactElement => {
     const onClickWrapped = useCallback((index: number) => {
-        return () => {
+        return (): void => {
             if (props.onClick == null) { return; }
             props.onClick(index);
         };

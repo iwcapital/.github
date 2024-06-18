@@ -114,7 +114,8 @@
         "@typescript-eslint/brace-style": "off",
         "@typescript-eslint/sort-type-constituents": "off",
         "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/lines-between-class-members": "off"
+        "@typescript-eslint/lines-between-class-members": "off",
+        "@typescript-eslint/use-unknown-in-catch-callback-variable": "off"
     },
     "settings": {
         "react": {
