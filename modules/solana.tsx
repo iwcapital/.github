@@ -55,7 +55,7 @@ const SolanaProvider = (props: PropsWithChildren): ReactElement => {
                     current.filter(wallet =>
                         wallets.includes(wallet))))
         ];
-        return () => listeners.forEach(off => off());
+        return (): void => listeners.forEach(off => off());
     }, []);
 
     const connect = useCallback(async (wallet: SupportedWallet) => {

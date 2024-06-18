@@ -1,3 +1,3 @@
-# IW Capital Inc.
+# IW Capital
 
-*Copyright (c) 2023 IW Capital Inc.*
+**Copyright © 2023 iwcapital.xyz**
